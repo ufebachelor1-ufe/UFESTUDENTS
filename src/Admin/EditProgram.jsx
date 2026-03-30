@@ -29,9 +29,9 @@ export default function EditProgram() {
   const [imgRemoved, setImgRemoved] = useState(false);
 
   // ✅ MULTIPLE IMAGES
-  const [images, setImages] = useState([]); // stored urls
-  const [newImages, setNewImages] = useState([]); // new files
-  const [previews, setPreviews] = useState([]); // preview urls
+  const [images, setImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [previews, setPreviews] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -72,11 +72,10 @@ export default function EditProgram() {
 
       setImgUrl(data.img_url || "");
 
-      // ✅ load multiple images
-      if (data.images) {
-        setImages(data.images);
-        setPreviews(data.images);
-      }
+      // ✅ FIXED: always set a real array
+      const imgs = Array.isArray(data.images) ? data.images : [];
+      setImages(imgs);
+      setPreviews(imgs);
     }
   };
 
@@ -103,10 +102,7 @@ export default function EditProgram() {
     const files = Array.from(e.target.files);
     setNewImages((prev) => [...prev, ...files]);
 
-    const previewUrls = files.map((file) =>
-      URL.createObjectURL(file)
-    );
-
+    const previewUrls = files.map((file) => URL.createObjectURL(file));
     setPreviews((prev) => [...prev, ...previewUrls]);
   };
 
@@ -150,9 +146,7 @@ export default function EditProgram() {
         const ext = file.name.split(".").pop();
         const filePath = `programs/multi_${id}_${Date.now()}_${file.name}`;
 
-        await supabase.storage
-          .from("images")
-          .upload(filePath, file);
+        await supabase.storage.from("images").upload(filePath, file);
 
         const publicUrl = supabase.storage
           .from("images")
@@ -188,9 +182,7 @@ export default function EditProgram() {
     if (!window.confirm("Та устгахдаа итгэлтэй байна уу?")) return;
 
     setLoading(true);
-
     await supabase.from("programs").delete().eq("id", id);
-
     setLoading(false);
     navigate("/admin/program");
   };
@@ -221,7 +213,6 @@ export default function EditProgram() {
       <input name="format" value={form.format} onChange={handleChange} placeholder="Суралцах хэлбэр" />
       <input name="credits" value={form.credits} onChange={handleChange} placeholder="Судлах кредит" />
       <input name="lang" value={form.lang} onChange={handleChange} placeholder="Суралцах хэл" />
-      
       <input name="tuition" value={form.tuition} onChange={handleChange} placeholder="Төлбөр" />
 
       <textarea
@@ -262,12 +253,7 @@ export default function EditProgram() {
       {/* MULTIPLE IMAGES */}
       <p><b>Нэмэлт зураг</b></p>
 
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImages}
-      />
+      <input type="file" accept="image/*" multiple onChange={handleImages} />
 
       <div className="preview-grid">
         {previews.map((src, i) => (
@@ -289,11 +275,7 @@ export default function EditProgram() {
           {loading ? "Хадгалж байна..." : "Хадгалах"}
         </button>
 
-        <button
-          onClick={deleteProgram}
-          disabled={loading}
-          className="danger-btn"
-        >
+        <button onClick={deleteProgram} disabled={loading} className="danger-btn">
           Устгах
         </button>
       </div>
