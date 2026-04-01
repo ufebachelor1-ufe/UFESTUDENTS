@@ -130,7 +130,7 @@ export default function ProgramAddPost() {
           format: form.format || null,
           video_url: form.video_url || null,
           img_url: imageUrl,
-          images: imageUrls, // ✅ save array
+          images: imageUrls.length > 0 ? imageUrls : null, // ✅ save array
         },
       ]);
 
