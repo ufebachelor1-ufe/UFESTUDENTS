@@ -1,0 +1,81 @@
+/* 🔒 FULLSCREEN LOGIN – root-д нөлөөлөхгүй */
+.login-page {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* center helper */
+.login-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* card */
+.login-box {
+  width: 360px;
+  text-align: center;
+}
+
+.login-logo img {
+  width: 150px;
+  margin-bottom: 10px;
+}
+
+.login-logo h2 {
+  color: #0b5ed7;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 5px;
+  font-size: 18px;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-bottom-color: #0b5ed7;
+}
+
+.login-btn {
+  width: 100%;
+  background: #0b5ed7;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 6px 12px rgba(11, 94, 215, 0.3);
+}
+
+.login-btn:hover {
+  background: #094cb3;
+}
+
+.error-text {
+  color: red;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.footer-text {
+  margin-top: 40px;
+  font-size: 18px;
+  color: #999;
+}

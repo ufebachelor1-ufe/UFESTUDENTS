@@ -1,0 +1,34 @@
+.home-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.post-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.post-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.post-card h3 {
+  padding: 15px;
+  margin: 0;
+}
+
+.post-card p {
+  padding: 0 15px 20px;
+  color: #555;
+}
