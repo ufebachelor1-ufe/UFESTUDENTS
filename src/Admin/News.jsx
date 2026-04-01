@@ -7,12 +7,15 @@ export default function News() {
   const [news, setNews] = useState([]);
   const [filterType, setFilterType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchNews();
   }, [filterType]);
 
   const fetchNews = async () => {
+    setLoading(true);
+
     let query = supabase
       .from("news")
       .select("*")
@@ -27,6 +30,8 @@ export default function News() {
     if (!error) {
       setNews(data || []);
     }
+
+    setLoading(false);
   };
 
   const filteredNews = news.filter((item) => {
@@ -62,7 +67,16 @@ export default function News() {
       </div>
 
       {/* Filter + Search */}
-      <div style={{ margin: "20px 0", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
+      <div
+        style={{
+          margin: "20px 0",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "10px",
+        }}
+      >
         {/* Filter Pills */}
         <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           {filters.map((item) => (
@@ -72,8 +86,10 @@ export default function News() {
               style={{
                 padding: "8px 14px",
                 borderRadius: "20px",
-                border: filterType === item.value ? "none" : "1px solid #ccc",
-                background: filterType === item.value ? "#2563eb" : "#f5f5f5",
+                border:
+                  filterType === item.value ? "none" : "1px solid #ccc",
+                background:
+                  filterType === item.value ? "#2563eb" : "#f5f5f5",
                 color: filterType === item.value ? "white" : "black",
                 cursor: "pointer",
                 fontSize: "15px",
@@ -115,23 +131,44 @@ export default function News() {
         </thead>
 
         <tbody>
-          {filteredNews.map((item, index) => (
-            <tr key={item.id}>
-              <td>{index + 1}</td>
-              <td>{item.title}</td>
-              <td className="truncate">{item.description}</td>
-              <td>{item.type}</td>
-              <td>{new Date(item.created_at).toLocaleDateString()}</td>
-              <td>
-                <button
-                  className="edit-btn"
-                  onClick={() => navigate(`/admin/edit-post/${item.id}`)}
-                >
-                  Edit
-                </button>
+          {loading && (
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center" }}>
+                Loading...
               </td>
             </tr>
-          ))}
+          )}
+
+          {!loading && filteredNews.length === 0 && (
+            <tr>
+              <td colSpan={6} style={{ textAlign: "center" }}>
+                No news found
+              </td>
+            </tr>
+          )}
+
+          {!loading &&
+            filteredNews.map((item, index) => (
+              <tr key={item.id}>
+                <td>{index + 1}</td>
+                <td>{item.title}</td>
+                <td className="truncate">{item.description}</td>
+                <td>{item.type}</td>
+                <td>
+                  {new Date(item.created_at).toLocaleDateString()}
+                </td>
+                <td>
+                  <button
+                    className="edit-btn"
+                    onClick={() =>
+                      navigate(`/admin/edit-post/${item.id}`)
+                    }
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
