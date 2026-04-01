@@ -52,7 +52,7 @@ export default function News() {
     <div style={{ padding: "20px" }}>
       {/* Header */}
       <div className="news-header">
-        <h2>boljinuu</h2>
+        <h2>Бүх мэдээ</h2>
         <button
           className="news-add-btn"
           onClick={() => navigate("/admin/add-post")}
