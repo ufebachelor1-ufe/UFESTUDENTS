@@ -48,7 +48,7 @@ export default function Calendar() {
     <div style={{ padding: "20px" }}>
       {/* Header */}
       <div className="news-header">
-        <h2>Календар</h2>
+        <h2>Календарь</h2>
         <button
           className="news-add-btn"
           onClick={() => navigate("/admin/calendar/add")}
