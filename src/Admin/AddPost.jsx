@@ -35,7 +35,6 @@ export default function AddPost() {
     "italic",
     "underline",
     "list",
-    "bullet",
     "link",
     "blockquote",
   ];

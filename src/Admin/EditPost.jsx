@@ -37,7 +37,6 @@ export default function EditPost() {
     "italic",
     "underline",
     "list",
-    "bullet",
     "link",
     "blockquote",
   ];
