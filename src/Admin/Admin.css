@@ -523,4 +523,21 @@ input[type="file"] {
   width: 100%;          /* force full width */
 }
 
+.news-content {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #1f2937;
+}
+
+.news-content a {
+  color: #20409a;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.ql-editor {
+  min-height: 260px;
+  font-size: 15px;
+  line-height: 1.7;
+}
 

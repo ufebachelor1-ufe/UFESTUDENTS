@@ -152,7 +152,14 @@ export default function News() {
               <tr key={item.id}>
                 <td>{index + 1}</td>
                 <td>{item.title}</td>
-                <td className="truncate">{item.description}</td>
+                <td className="truncate">
+                  {(() => {
+                  const div = document.createElement("div");
+                  div.innerHTML = item.description || "";
+                  const text = div.textContent || div.innerText || "";
+                  return text.slice(0, 80) + "...";
+                  })()}
+                </td>
                 <td>{item.type}</td>
                 <td>
                   {new Date(item.created_at).toLocaleDateString()}

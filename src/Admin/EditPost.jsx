@@ -1,30 +1,47 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { supabase } from "../supabase";
 
 export default function EditPost() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // text fields
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
 
-  // main image
   const [mainImage, setMainImage] = useState(null);
   const [mainPreview, setMainPreview] = useState("");
 
-  // multiple images
   const [images, setImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [previews, setPreviews] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
-  /* ================================
-     FETCH POST
-  ================================ */
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "blockquote"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "link",
+    "blockquote",
+  ];
+
   useEffect(() => {
     fetchPost();
   }, [id]);
@@ -51,10 +68,6 @@ export default function EditPost() {
     }
   };
 
-  /* ================================
-     HANDLERS
-  ================================ */
-
   const handleMainImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -76,6 +89,8 @@ export default function EditPost() {
       ...prev,
       ...files.map((f) => URL.createObjectURL(f)),
     ]);
+
+    e.target.value = null;
   };
 
   const removeImage = (index) => {
@@ -83,16 +98,12 @@ export default function EditPost() {
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /* ================================
-     UPDATE POST
-  ================================ */
   const updatePost = async () => {
     setLoading(true);
 
     let finalImageUrl = mainPreview;
     let finalImages = [...images];
 
-    // Upload main image
     if (mainImage) {
       const ext = mainImage.name.split(".").pop();
       const path = `posts/${id}-${Date.now()}.${ext}`;
@@ -112,7 +123,6 @@ export default function EditPost() {
         .getPublicUrl(path).data.publicUrl;
     }
 
-    // Upload additional images
     for (const img of newImages) {
       const ext = img.name.split(".").pop();
       const path = `posts/${Date.now()}-${Math.random()}.${ext}`;
@@ -134,16 +144,20 @@ export default function EditPost() {
       finalImages.push(url);
     }
 
-    const { error } = await supabase
-      .from("news")
-      .update({
-        title,
-        description,
-        type,
-        image_url: finalImageUrl,
-        images: finalImages,
-      })
-      .eq("id", id);
+      const cleanDescription = description
+        .replace(/&nbsp;/g, " ")
+        .replace(/\u00A0/g, " ");
+
+      const { error } = await supabase
+        .from("news")
+        .update({
+          title,
+          description: cleanDescription,
+          type,
+          image_url: finalImageUrl,
+          images: finalImages,
+        })
+        .eq("id", id);
 
     if (error) {
       alert(error.message);
@@ -155,18 +169,12 @@ export default function EditPost() {
     navigate("/admin/news");
   };
 
-  /* ================================
-     DELETE POST
-  ================================ */
   const deletePost = async () => {
     if (!window.confirm("Энэ мэдээг устгах уу?")) return;
 
     setLoading(true);
 
-    const { error } = await supabase
-      .from("news")
-      .delete()
-      .eq("id", id);
+    const { error } = await supabase.from("news").delete().eq("id", id);
 
     if (error) {
       alert(error.message);
@@ -178,9 +186,6 @@ export default function EditPost() {
     navigate("/admin/news");
   };
 
-  /* ================================
-     UI
-  ================================ */
   return (
     <div className="form-container">
       <h2>Мэдээ засах</h2>
@@ -191,10 +196,14 @@ export default function EditPost() {
         placeholder="Гарчиг"
       />
 
-      <textarea
+      <label>Мэдээний агуулга</label>
+      <ReactQuill
+        theme="snow"
         value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Тайлбар"
+        onChange={setDescription}
+        modules={modules}
+        formats={formats}
+        placeholder="Мэдээний агуулга бичнэ үү..."
       />
 
       <select value={type} onChange={(e) => setType(e.target.value)}>
@@ -207,36 +216,26 @@ export default function EditPost() {
         <option value="Пин постер">Пин постер</option>
       </select>
 
-      {/* MAIN IMAGE */}
-      <p><b>Үндсэн зураг</b></p>
+      <p>
+        <b>Үндсэн зураг</b>
+      </p>
 
       {mainPreview && (
         <div className="preview-wrapper">
           <img src={mainPreview} className="preview" alt="" />
-          <button
-            type="button"
-            className="remove-btn"
-            onClick={removeMainImage}
-          >
+          <button type="button" className="remove-btn" onClick={removeMainImage}>
             ✕
           </button>
         </div>
       )}
 
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleMainImage}
-      />
+      <input type="file" accept="image/*" onChange={handleMainImage} />
 
-      {/* MULTIPLE IMAGES */}
-      <p><b>Нэмэлт зураг</b></p>
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImages}
-      />
+      <p>
+        <b>Нэмэлт зураг</b>
+      </p>
+
+      <input type="file" accept="image/*" multiple onChange={handleImages} />
 
       <div className="preview-grid">
         {previews.map((src, i) => (
@@ -258,11 +257,7 @@ export default function EditPost() {
           {loading ? "Хадгалж байна..." : "Хадгалах"}
         </button>
 
-        <button
-          onClick={deletePost}
-          disabled={loading}
-          className="danger-btn"
-        >
+        <button onClick={deletePost} disabled={loading} className="danger-btn">
           Устгах
         </button>
       </div>

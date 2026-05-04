@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { supabase } from "../supabase";
 
 export default function AddPost() {
@@ -9,17 +11,35 @@ export default function AddPost() {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("");
 
-  // main image
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
-  // multiple images
   const [images, setImages] = useState([]);
   const [previews, setPreviews] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
-  // main image handler
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "blockquote"],
+      ["clean"],
+    ],
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "link",
+    "blockquote",
+  ];
+
   const handleImage = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -27,7 +47,6 @@ export default function AddPost() {
     setPreview(URL.createObjectURL(file));
   };
 
-  // ✅ FIXED: append images instead of replacing
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
 
@@ -37,7 +56,6 @@ export default function AddPost() {
       ...files.map((f) => URL.createObjectURL(f)),
     ]);
 
-    // allow selecting the same file again
     e.target.value = null;
   };
 
@@ -54,7 +72,6 @@ export default function AddPost() {
     let imageUrl = null;
     let imageUrls = [];
 
-    // upload main image
     if (image) {
       const ext = image.name.split(".").pop();
       const fileName = `${Date.now()}.${ext}`;
@@ -76,7 +93,6 @@ export default function AddPost() {
       imageUrl = data.publicUrl;
     }
 
-    // upload multiple images
     for (const img of images) {
       const ext = img.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random()}.${ext}`;
@@ -98,16 +114,19 @@ export default function AddPost() {
       imageUrls.push(data.publicUrl);
     }
 
-    // insert news
-    const { error } = await supabase.from("news").insert([
-      {
-        title,
-        description,
-        type,
-        image_url: imageUrl,
-        images: imageUrls,
-      },
-    ]);
+      const cleanDescription = description
+        .replace(/&nbsp;/g, " ")
+        .replace(/\u00A0/g, " ");
+
+      const { error } = await supabase.from("news").insert([
+        {
+          title,
+          description: cleanDescription,
+          type,
+          image_url: imageUrl,
+          images: imageUrls,
+        },
+      ]);
 
     if (error) {
       alert(error.message);
@@ -131,15 +150,20 @@ export default function AddPost() {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <textarea
-          placeholder="Мэдээ"
+        <label>Мэдээний агуулга</label>
+        <ReactQuill
+          theme="snow"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={setDescription}
+          modules={modules}
+          formats={formats}
+          placeholder="Мэдээний агуулга бичнэ үү..."
         />
 
         <label>
           Нийтлэлийн төрөл <span style={{ color: "red" }}>*</span>
         </label>
+
         <select value={type} onChange={(e) => setType(e.target.value)} required>
           <option value="" disabled>
             -- Сонгох --
@@ -153,19 +177,12 @@ export default function AddPost() {
           <option value="Пин постер">Пин постер</option>
         </select>
 
-        {/* Main image */}
         <label>Үндсэн зураг</label>
         <input type="file" accept="image/*" onChange={handleImage} />
         {preview && <img src={preview} className="preview" alt="preview" />}
 
-        {/* Multiple images */}
         <label>Нэмэлт зургууд</label>
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleImages}
-        />
+        <input type="file" accept="image/*" multiple onChange={handleImages} />
 
         <div className="preview-grid">
           {previews.map((src, i) => (
