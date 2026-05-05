@@ -169,7 +169,7 @@ export default function AddPost() {
           </option>
           <option value="Мэдээ">Мэдээ</option>
           <option value="Зар">Зар</option>
-          <option value="БСА Зар">БСА Зар</option>
+          {/*value="БСА Зар">БСА Зар*/}
           <option value="Хурлын зар">Хурлын зар</option>
           <option value="Ажлын байрны зар">Ажлын байрны зар</option>
           <option value="Видео контент">Видео контент</option>
