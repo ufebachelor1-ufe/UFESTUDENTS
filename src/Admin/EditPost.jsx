@@ -210,6 +210,7 @@ export default function EditPost() {
         <option value="Зар">Зар</option>
         {/*value="БСА Зар">БСА Зар*/}
         <option value="Амжилтын зар">Амжилтын зар</option>
+        <option value="Тэтгэлгийн зар">Тэтгэлгийн зар</option>
         <option value="Хурлын зар">Хурлын зар</option>
         <option value="Ажлын байрны зар">Ажлын байрны зар</option>
         <option value="Видео контент">Видео контент</option>
