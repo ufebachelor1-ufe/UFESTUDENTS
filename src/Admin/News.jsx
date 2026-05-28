@@ -47,6 +47,7 @@ export default function News() {
     { label: "Мэдээ", value: "Мэдээ" },
     { label: "Зар", value: "Зар" },
     { label: "БСА Зар", value: "БСА Зар" },
+    { label: "Амжилтын зар", value: "Амжилтын зар" },
     { label: "Хурлын зар", value: "Хурлын зар" },
     { label: "Ажлын байрны зар", value: "Ажлын байрны зар" },
     { label: "Видео контент", value: "Видео контент" },
