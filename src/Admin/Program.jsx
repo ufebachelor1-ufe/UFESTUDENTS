@@ -30,7 +30,10 @@ export default function Program() {
         tuition,
         description,
         img_url,
+        pdf_url,
+        pdf_url2,
         video_url,
+        video_url2,
         created_at
       `)
       .order("created_at", { ascending: false });

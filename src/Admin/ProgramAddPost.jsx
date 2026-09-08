@@ -18,6 +18,9 @@ export default function ProgramAddPost() {
     format: "",
     tuition: "",
     video_url: "",
+    video_url2: "",
+    pdf_url: "",
+    pdf_url2: "",
   });
 
   // main image
@@ -129,6 +132,9 @@ export default function ProgramAddPost() {
           credits: form.credits || null,
           format: form.format || null,
           video_url: form.video_url || null,
+          video_url2: form.video_url2 || null,
+          pdf_url: form.pdf_url || null,
+          pdf_url2: form.pdf_url2 || null,
           img_url: imageUrl,
           images: imageUrls.length > 0 ? imageUrls : null, // ✅ save array
         },
@@ -236,6 +242,27 @@ export default function ProgramAddPost() {
           name="video_url"
           placeholder="Video URL (YouTube / MP4)"
           value={form.video_url}
+          onChange={handleChange}
+        />
+
+        <input
+          name="video_url2"
+          placeholder="Video URL (YouTube / MP4)"
+          value={form.video_url2}
+          onChange={handleChange}
+        />
+
+        <input
+          name="pdf_url"
+          placeholder="PDF URL"
+          value={form.pdf_url}
+          onChange={handleChange}
+        />
+
+        <input
+          name="pdf_url2"
+          placeholder="PDF URL 2"
+          value={form.pdf_url2}
           onChange={handleChange}
         />
 

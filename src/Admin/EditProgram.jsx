@@ -22,6 +22,9 @@ export default function EditProgram() {
     format: "",
     description: "",
     video_url: "",
+    video_url2: "",
+    pdf_url: "",
+    pdf_url2: "",
   });
 
   const [imgUrl, setImgUrl] = useState("");
@@ -68,6 +71,9 @@ export default function EditProgram() {
         tuition: data.tuition || "",
         description: data.description || "",
         video_url: data.video_url || "",
+        video_url2: data.video_url2 || "",
+        pdf_url: data.pdf_url || "",
+        pdf_url2: data.pdf_url2 || "",
       });
 
       setImgUrl(data.img_url || "");
@@ -227,6 +233,27 @@ export default function EditProgram() {
         value={form.video_url}
         onChange={handleChange}
         placeholder="Video URL"
+      />
+
+      <input
+        name="video_url2"
+        placeholder="Video URL"
+        value={form.video_url2}
+        onChange={handleChange}
+      />
+
+      <input
+        name="pdf_url"
+        placeholder="PDF URL"
+        value={form.pdf_url}
+        onChange={handleChange}
+      />
+
+      <input
+        name="pdf_url2"
+        placeholder="PDF URL 2"
+        value={form.pdf_url2}
+        onChange={handleChange}
       />
 
       {/* MAIN IMAGE */}
