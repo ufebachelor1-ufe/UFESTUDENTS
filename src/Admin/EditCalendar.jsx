@@ -98,7 +98,8 @@ export default function EditCalendar() {
         <option value="Хөтөлбөр хэрэгжүүлэгч нэгж">Хөтөлбөр хэрэгжүүлэгч нэгж</option>
         <option value="Оюутны хөгжлийн төвийн ажил">Оюутны хөгжлийн төв</option>
         <option value="Олон улсын хамтарсан хөтөлбөр">Олон улсын хөтөлбөр</option>
-        <option value="Оюутны холбоо, Оюутны клуб">Оюутны холбоо, клуб</option>
+        <option value="Оюутны клуб">Оюутны клуб</option>
+        <option value="Оюутны холбоо">Оюутны холбоо</option>
         <option value="Тэмдэглэлт өдөр">Тэмдэглэлт өдөр</option>
       </select>
       
